@@ -39,29 +39,20 @@
         <!--body-->
         <div class="col s12">
             <div>
-                <h5 class="center-align">Student information</h5>
+                <h5 class="center-align">Student information Detial</h5>
             </div>
-            <div class="right-align">
-                <a th:href="@{/student/add}" class="waves-effect waves-light btn" ><i class="material-icons left">add</i>new</a>
+            <div class="col s6">
+                <label  class="">Gender </label> <p th:text="${student.studentName}"></p>
             </div>
-            <table class="responsive-table highlight">
-                <thead>
-                    <tr><th>No</th><th>Name</th><th>Gender</th><th>Date of birth</th><th>Please of birth</th><th>actions</th></tr>
-                </thead>
-                <tbody>
-                        <tr th:each="student,iterationStatus : ${students}">
-                            <td th:text="${iterationStatus.count}"></td>
-                            <td><a th:href="@{'/student/detail/'+${student.studentId} }" href="#" target="_self"><span  th:text="${student.studentName}"></span></a></td>
-                            <td th:text="${student.studentGender}">male</td>
-                            <td th:text="${student.studentDob}">05-05-1993</td>
-                            <td th:text="${student.studentPob}">Phnom Penh</td>
-                            <td>
-                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{/student/(id=${student.studentId})}"><i class="large material-icons">mode_edit</i></a>
-                                <a class="btn btn-floating waves-effect waves-light red" th:href="@{'/student/remove/'+${student.studentId}}"><i class=" fa fa-trash-o"></i></a>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
+            <div class="col s6">
+                <label  class="">Birth Date </label> <p th:text="${student.studentGender}"></p>
+            </div>
+            <div class="col s6">
+                <label  class="">Birth Please </label> <p th:text="${student.studentDob}"></p>
+            </div>
+            <div class="col s6">
+                <label  class="">Birth Please </label> <p th:text="${student.studentPob}"></p>
+            </div>
         </div>
         <footer class="page-footer">
             <div class="container">

@@ -2,10 +2,7 @@ package org.hrd.thymeleaf.thymeleafTest
 
 import java.sql.Date
 
-/**
- * Created by ratha on 23-Jun-17.
- */
-data class Student(val studentName: String ,val studentGender:String ,val studentDob: Date , val studentPob:String) {
+data class Student(val  studentId : Int, val studentName: String ,val studentGender:String ,val studentDob: Date , val studentPob:String) {
 
     init {
 

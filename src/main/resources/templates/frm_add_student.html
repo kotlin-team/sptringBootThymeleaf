@@ -39,29 +39,36 @@
         <!--body-->
         <div class="col s12">
             <div>
-                <h5 class="center-align">Student information</h5>
+                <h5 class="center-align">Student registration</h5>
             </div>
-            <div class="right-align">
-                <a th:href="@{/student/add}" class="waves-effect waves-light btn" ><i class="material-icons left">add</i>new</a>
+            <div class="col s6 push-s5">
+                <div class="row">
+                    <form class="col s6 center-align"  role="form" action="#" method="post">
+                        <div class="input-field col s12">
+                            <input id="name" type="text" name="studnet.name" class="validate"/>
+                            <label for="name">Name</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <input id="male" type="radio" value="male" name="studnet.gender" class="validate" checked="true"/>
+                            <label for="male">male</label>
+                            <input id="female" type="radio" value="female" name="studnet.gender" class="validate"/>
+                            <label for="female">female</label>
+
+                        </div>
+                        <div class="input-field col s12">
+                            <input id="dob" type="date" class="datepicker" name="student.dob"/>
+                            <label for="dob">Birth date</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <textarea id="pob" class="materialize-textarea" data-length="120" name="student.pob"></textarea>
+                            <label for="pob">Birth please</label>
+                        </div>
+                        <div class="center-align">
+                            <button type="submit" class="waves-effect waves-light btn" ><i class=" fa fa-graduation-cap material-icons left"></i>Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <table class="responsive-table highlight">
-                <thead>
-                    <tr><th>No</th><th>Name</th><th>Gender</th><th>Date of birth</th><th>Please of birth</th><th>actions</th></tr>
-                </thead>
-                <tbody>
-                        <tr th:each="student,iterationStatus : ${students}">
-                            <td th:text="${iterationStatus.count}"></td>
-                            <td><a th:href="@{'/student/detail/'+${student.studentId} }" href="#" target="_self"><span  th:text="${student.studentName}"></span></a></td>
-                            <td th:text="${student.studentGender}">male</td>
-                            <td th:text="${student.studentDob}">05-05-1993</td>
-                            <td th:text="${student.studentPob}">Phnom Penh</td>
-                            <td>
-                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{/student/(id=${student.studentId})}"><i class="large material-icons">mode_edit</i></a>
-                                <a class="btn btn-floating waves-effect waves-light red" th:href="@{'/student/remove/'+${student.studentId}}"><i class=" fa fa-trash-o"></i></a>
-                            </td>
-                        </tr>
-                </tbody>
-            </table>
         </div>
         <footer class="page-footer">
             <div class="container">
@@ -89,7 +96,20 @@
             </div>
         </footer>
     </div>
+
+    <!--jquery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+    <script th:src="@{/js/form.js}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            changeMonth: true,
+            changeYear: true,
+            selectYears: 100
+        });
+    </script>
 </body>
 </html>
