@@ -43,24 +43,23 @@
             </div>
             <div class="col s6 push-s5">
                 <div class="row">
-                    <form class="col s6 center-align"  role="form" action="#" method="post">
+                    <form class="col s6 center-align" th:action="@{/student/add}" role="form" action="#" method="post">
                         <div class="input-field col s12">
-                            <input id="name" type="text" name="studnet.name" class="validate"/>
+                            <input id="name" type="text" name="name" class="validate"/>
                             <label for="name">Name</label>
                         </div>
                         <div class="input-field col s12">
-                            <input id="male" type="radio" value="male" name="studnet.gender" class="validate" checked="true"/>
+                            <input id="male" type="radio" value="male" name="gender" class="validate" checked="true"/>
                             <label for="male">male</label>
-                            <input id="female" type="radio" value="female" name="studnet.gender" class="validate"/>
+                           <input id="female" type="radio" value="female" name="gender" class="validate"/>
                             <label for="female">female</label>
-
                         </div>
                         <div class="input-field col s12">
-                            <input id="dob" type="date" class="datepicker" name="student.dob"/>
+                            <input id="dob" type="date" name="dob" class="datepicker" />
                             <label for="dob">Birth date</label>
                         </div>
                         <div class="input-field col s12">
-                            <textarea id="pob" class="materialize-textarea" data-length="120" name="student.pob"></textarea>
+                            <textarea id="pob" name="pob" class="materialize-textarea" data-length="120"></textarea>
                             <label for="pob">Birth please</label>
                         </div>
                         <div class="center-align">
