@@ -11,18 +11,18 @@
         <!--include navBar from resource fragment/share/nav-bar-->
         <nav th:include="fragment/share/navbar :: navBarFramgent"></nav>
         <!--body-->
-        <div class="col s12">
+        <div class="col s12" th:fragment="studentFragment" id="studentTable" >
             <div>
                 <h5 class="center-align">Student information</h5>
             </div>
             <div class="right-align">
                 <a th:href="@{/student/add}" class="waves-effect waves-light btn" ><i class="material-icons left">add</i>new</a>
             </div>
-            <table class="responsive-table highlight">
+            <table  class="responsive-table highlight">
                 <thead>
                     <tr><th>No</th><th>Name</th><th>Gender</th><th>Date of birth</th><th>Please of birth</th><th>actions</th></tr>
                 </thead>
-                <tbody>
+                <tbody >
                         <tr th:each="student,iterationStatus : ${students}">
                             <td th:text="${iterationStatus.count}"></td>
                             <td><a th:href="@{'/student/detail/'+${student.studentId} }" href="#" target="_self"><span  th:text="${student.studentName}"></span></a></td>
@@ -30,26 +30,50 @@
                             <td th:text="${student.studentDob}">05-05-1993</td>
                             <td th:text="${student.studentPob}">Phnom Penh</td>
                             <td>
-                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{'/student/'+${student.studentId}}"><i class="large material-icons">mode_edit</i></a>
+                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{'/student/edit/'+${student.studentId}}"><i class="large material-icons">mode_edit</i></a>
                                 <a class="btn btn-floating waves-effect waves-light red" th:href="@{'/student/remove/'+${student.studentId}}"><i class=" fa fa-trash-o"></i></a>
                             </td>
                         </tr>
                 </tbody>
+                <tfoot>
+                    <!--STUDENT PAGINATION-->
+                    <ul class="pagination center">
+                        <li  class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        <li th:each="i: ${#numbers.sequence(paging.startPage,paging.endPage)}" class="active" th:class="${i==paging.currentPage} ? 'active':'waves-effect'">
+                            <a href="#!" th:onclick="'onPaging('+ ${i} +')'" th:text="${i}">1</a>
+                        </li>
+                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                    </ul>
+                </tfoot>
             </table>
-            <ul class="pagination center">
-                <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <li class="active"><a href="#!" th:href="@{/stduent/(p=${})}">1</a></li>
-                <li class="waves-effect"><a href="#!">2</a></li>
-                <li class="waves-effect"><a href="#!">3</a></li>
-                <li class="waves-effect"><a href="#!">4</a></li>
-                <li class="waves-effect"><a href="#!">5</a></li>
-                <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-            </ul>
+
         </div>
         <!--include footer  from resource  fragment/share/footer-->
         <footer class="page-footer" th:include="fragment/share/footer :: footerFragment"></footer>
     </div>
     <!--include script from /fragment/share?**-->
     <render th:include="fragment/share/footer_script :: footerScript"></render>
+
+    <script>
+
+        var loadStudents=function(currentPage){
+            $.ajax({
+                url:'student/'+currentPage,
+                method :'GET',
+                success: function (res) {
+                    $('#studentTable').html(res)
+                    //console.log(res)
+                },
+                error:function (error) {
+                    console.log(error)
+                }
+            });
+        }
+        
+        function onPaging(currentpage) {
+            loadStudents(currentpage)
+        }
+
+    </script>
 </body>
 </html>

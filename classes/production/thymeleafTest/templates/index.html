@@ -1,54 +1,28 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8" />
-    <title>Title</title>
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
-    <link href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet"/>
 
+<head th:include="fragment/share/head :: headerFragment">
+    <meta charset="UTF-8" />
+    <title th:text="${title}">Title</title>
 </head>
 <body>
 <!--navigation bar-->
     <div class="container">
-        <nav class="nav-extended">
-            <div class="nav-wrapper">
-                <a href="#" class="brand-logo">Logo</a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
-                <ul id="nav-mobile" class="right hide-on-med-and-down">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">JavaScript</a></li>
-                </ul>
-                <ul class="side-nav" id="mobile-demo">
-                    <li><a href="sass.html">Sass</a></li>
-                    <li><a href="badges.html">Components</a></li>
-                    <li><a href="collapsible.html">JavaScript</a></li>
-                </ul>
-            </div>
-            <div class="nav-content">
-                <ul class="tabs tabs-transparent">
-                    <li class="tab"><a href="#test1">Test 1</a></li>
-                    <li class="tab"><a class="active" href="#test2">Test 2</a></li>
-                    <li class="tab disabled"><a href="#test3">Disabled Tab</a></li>
-                    <li class="tab"><a href="#test4">Test 4</a></li>
-                </ul>
-            </div>
-        </nav>
+        <!--include navBar from resource fragment/share/nav-bar-->
+        <nav th:include="fragment/share/navbar :: navBarFramgent"></nav>
         <!--body-->
-        <div class="col s12">
+        <div class="col s12" th:fragment="studentFragment" id="studentTable" >
             <div>
                 <h5 class="center-align">Student information</h5>
             </div>
             <div class="right-align">
                 <a th:href="@{/student/add}" class="waves-effect waves-light btn" ><i class="material-icons left">add</i>new</a>
             </div>
-            <table class="responsive-table highlight">
+            <table  class="responsive-table highlight">
                 <thead>
                     <tr><th>No</th><th>Name</th><th>Gender</th><th>Date of birth</th><th>Please of birth</th><th>actions</th></tr>
                 </thead>
-                <tbody>
+                <tbody >
                         <tr th:each="student,iterationStatus : ${students}">
                             <td th:text="${iterationStatus.count}"></td>
                             <td><a th:href="@{'/student/detail/'+${student.studentId} }" href="#" target="_self"><span  th:text="${student.studentName}"></span></a></td>
@@ -56,40 +30,50 @@
                             <td th:text="${student.studentDob}">05-05-1993</td>
                             <td th:text="${student.studentPob}">Phnom Penh</td>
                             <td>
-                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{'/student/'+${student.studentId}}"><i class="large material-icons">mode_edit</i></a>
+                                <a class="btn btn-floating waves-effect waves-light yellow darken-1" th:href="@{'/student/edit/'+${student.studentId}}"><i class="large material-icons">mode_edit</i></a>
                                 <a class="btn btn-floating waves-effect waves-light red" th:href="@{'/student/remove/'+${student.studentId}}"><i class=" fa fa-trash-o"></i></a>
                             </td>
                         </tr>
                 </tbody>
+                <tfoot>
+                    <!--STUDENT PAGINATION-->
+                    <ul class="pagination center">
+                        <li  class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+                        <li th:each="i: ${#numbers.sequence(paging.startPage,paging.endPage)}" class="active" th:class="${i==paging.currentPage} ? 'active':'waves-effect'">
+                            <a href="#!" th:onclick="'onPaging('+ ${i} +')'" th:text="${i}">1</a>
+                        </li>
+                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+                    </ul>
+                </tfoot>
             </table>
+
         </div>
-        <footer class="page-footer">
-            <div class="container">
-                <div class="row">
-                    <div class="col l6 s12">
-                        <h5 class="white-text">Footer Content</h5>
-                        <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
-                    </div>
-                    <div class="col l4 offset-l2 s12">
-                        <h5 class="white-text">Links</h5>
-                        <ul>
-                            <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                            <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                            <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                            <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-copyright">
-                <div class="container">
-                    © 2017 Copyright KHMERACADEMY
-                    <a class="grey-text text-lighten-4 right" href="http://www.khmeracademy.org/" target="_blank _parent">www.khmeracademy.org</a>
-                </div>
-            </div>
-        </footer>
+        <!--include footer  from resource  fragment/share/footer-->
+        <footer class="page-footer" th:include="fragment/share/footer :: footerFragment"></footer>
     </div>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+    <!--include script from /fragment/share?**-->
+    <render th:include="fragment/share/footer_script :: footerScript"></render>
+
+    <script>
+
+        var loadStudents=function(currentPage){
+            $.ajax({
+                url:'student/'+currentPage,
+                method :'GET',
+                success: function (res) {
+                    $('#studentTable').html(res)
+                    //console.log(res)
+                },
+                error:function (error) {
+                    console.log(error)
+                }
+            });
+        }
+        
+        function onPaging(currentpage) {
+            loadStudents(currentpage)
+        }
+
+    </script>
 </body>
 </html>

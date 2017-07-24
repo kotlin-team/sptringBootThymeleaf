@@ -1,6 +1,8 @@
 package org.hrd.thymeleaf.thymeleafTest.repository
 
+import org.hrd.thymeleaf.thymeleafTest.entity.Pagination
 import org.hrd.thymeleaf.thymeleafTest.entity.Student
+import org.hrd.thymeleaf.thymeleafTest.util.MemoryPagination
 import org.springframework.stereotype.Component
 import java.sql.Date
 
@@ -23,13 +25,16 @@ class StudentRepository {
             Student(studentId = 10, studentName = "Sevmey", studentGender = "female", studentDob = Date.valueOf("1996-12-19"), studentPob = "Phnom Penh")
     )
 
-    fun getAllStudents(page: Int=1, rowPerPage : Int=15) : MutableList<Student>{
-
-        var pageNumber =this.studentLists.size/
-        return this.studentLists;
+    fun getAllStudents() : MutableList<Student>{
+        return this.studentLists
+    }
+    fun getAllStudentsWithPaginate(startRow : Int, endRow : Int) : MutableList<Student>{
+       // val pagination =MemoryPagination<Student>().getMemoryPagination(currentPage= page, rowPerPage=rowPerPage,list = this.studentLists)
+        val studentOut= this.studentLists.subList(startRow,endRow)
+        return studentOut;
     }
     fun getOneStudent(id: Int) : Student?{
-        for (student: Student in this.studentLists){
+        for(student: Student in this.studentLists){
             if(student!!.studentId==id) {
                 return student
             }

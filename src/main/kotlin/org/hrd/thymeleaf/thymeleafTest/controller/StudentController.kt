@@ -2,6 +2,7 @@ package org.hrd.thymeleaf.thymeleafTest.controller
 
 import org.hrd.thymeleaf.thymeleafTest.entity.Student
 import org.hrd.thymeleaf.thymeleafTest.repository.StudentRepository
+import org.hrd.thymeleaf.thymeleafTest.util.MemoryPagination
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -48,7 +49,7 @@ class StudentController
                 map.put("DATA" , student as Object)
                 map.put("CODE", 200 as Object)
                 map.put("STATUS" , true as Object)
-                map.put("MESSAGE" , "GET STUDENT SUCCESSFULL" as Object)
+                map.put("MESSAGE" , "GET STUDENT SUCCESSFUL" as Object)
             }
         }catch (e: Exception){
             e.printStackTrace()
@@ -57,18 +58,69 @@ class StudentController
         return ResponseEntity<MutableMap<String ,Any>>(map ,HttpStatus.OK);
     }
 
+    /*
+        getStudent as paginate
+     */
+
+    @GetMapping("/{p}")
+    fun getStudentPerPage(model : ModelMap,@PathVariable("p") currentPage:Int) : String
+    {
+        val list= studentRepository.getAllStudentsWithPaginate(currentPage,5)
+        val pagin=
+        model.put("students",list)
+        model.put("title" , "home | ")
+        model.put("paging", MemoryPagination<Student>().getMemoryPagination(currentPage,5,list))
+        return "index :: studentFragment"
+    }
+
+
+   /* @ResponseBody
+    @GetMapping("/{p}")
+    fun getStudentPerPage(model : ModelMap,@PathVariable("p") currentPage:Int) : ResponseEntity<MutableMap<String ,Any>>
+    {
+        val map : MutableMap<String ,Any>  = hashMapOf()
+        try{
+            val pagination = MemoryPagination<Student>().getMemoryPagination(currentPage,3,this.studentRepository.getAllStudents())
+            val list : MutableList<Student> =this.studentRepository.
+                    getAllStudentsWithPaginate(pagination.getStartRow(), pagination.getEndRow())
+            if (list.isEmpty() || list!=null){
+                map.put("DATA" , list)
+                map.put("PAGINATION" , pagination)
+                map.put("CODE", 200 )
+                map.put("STATUS" , true)
+                map.put("MESSAGE" , "GET STUDENT LIST SUCCESSFUL")
+            }else{
+                map.put("DATA" , list as Object)
+                map.put("PAGINATION" , pagination)
+                map.put("CODE", 200 as Object)
+                map.put("STATUS" , true as Object)
+                map.put("MESSAGE" , "GET STUDENT LIST SUCCESSFUL" )
+            }
+        }catch (e: Exception){
+            map.put("DATA" , "")
+            map.put("PAGINATION" , "")
+            map.put("CODE", 200 )
+            map.put("STATUS" , true)
+            map.put("MESSAGE" , "HAVE AN ERROR WHILE REQUEST TO SERVER")
+            e.printStackTrace()
+        }
+        return ResponseEntity<MutableMap<String ,Any>>(map ,HttpStatus.OK);
+    }*/
+
+
     /*========================================
      * simple controller
      =========================================*/
     @GetMapping(value = *arrayOf("/",""))
     fun homePage(model : ModelMap) : String
     {
-        val list : MutableList<Student> =this.studentRepository.getAllStudents()
+        val list : MutableList<Student> =this.studentRepository.getAllStudentsWithPaginate(startRow = 1, endRow = 5)
         model.put("students",list);
         model.put("title" , "home | ")
-
+        model.put("paging",MemoryPagination<Student>().getMemoryPagination(1,5,list))
         return "index"
     }
+
     @GetMapping("/add")
     fun addStudent( model : ModelMap) : String {
         model.put("title", "register")
@@ -103,8 +155,8 @@ class StudentController
 
     /*
     * get a student to from edit */
-    @GetMapping("{id}")
-    fun homePage(model : ModelMap, @PathVariable("id") id : Int) : String
+    @GetMapping("edit/{id}")
+    fun getStudentEdit(model : ModelMap, @PathVariable("id") id : Int) : String
     {
         val student=this.studentRepository.getOneStudent(id)
         model.put("student",student);
@@ -150,4 +202,30 @@ class StudentController
         val utilDate : java.util.Date = dateFormat.parse(date)
         return  Date(utilDate.time)
     }
+
+    //bind data with html page
+    private fun studentsPaginate(page :Int , dataPerRow: Int ) : String {
+        val list = studentRepository.getAllStudentsWithPaginate(page,dataPerRow)
+        var totalData =""
+        var stduentRow= (page -1)*dataPerRow +1
+        list.forEach {
+            totalData +=
+                    "<tr>\n" +
+                    "    <td >${stduentRow}</td>\n" +
+                    "    <td><a href=\"/student/detail/${it.studentId}\" target=\"_self\"><span  th:text=\"\">${it.studentName}</span></a></td>\n" +
+                    "    <td >${it.studentGender}</td>\n" +
+                    "    <td >${it.studentDob}</td>\n" +
+                    "    <td >${it.studentPob}</td>\n" +
+                    "    <td>\n" +
+                    "    <a class=\"btn btn-floating waves-effect waves-light yellow darken-1\" href=\"/student/edit/${it.studentId}\" ><i class=\"large material-icons\">mode_edit</i></a>\n" +
+                    "    <a class=\"btn btn-floating waves-effect waves-light red\" href=\"/student/remove/${it.studentId}\"><i class=\" fa fa-trash-o\"></i></a>\n" +
+                    "    </td>\n" +
+                    "    </tr> ${list.size}"
+            stduentRow ++
+        }
+
+        return totalData;
+    }
+
+
 }

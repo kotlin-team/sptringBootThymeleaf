@@ -1,13 +1,7 @@
 package org.hrd.thymeleaf.thymeleafTest.entity
 
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.annotations.SerializedName
 import java.sql.Date
-import javax.persistence.PersistenceProperty
-import kotlin.reflect.jvm.internal.impl.descriptors.annotations.Annotations
-
-
 data class Student(
                    @SerializedName("STUDENT_NAME") var studentName: String,
                    @SerializedName("STUDENT_GENDER") var studentGender:String,
@@ -16,11 +10,10 @@ data class Student(
 {
 
     @SerializedName("STUDENT_ID") var studentId : Int = 0
-    @SerializedName("PAGINATION") lateinit var pagination : Pagination
 
     constructor ( studentId : Int, studentName: String , studentGender: String, studentDob: Date, studentPob: String) :
             this(studentName,studentGender,studentDob,studentPob) {
-        this.studentId=studentId
+            this.studentId=studentId
     }
 
     fun getId() :Int = this.studentId
