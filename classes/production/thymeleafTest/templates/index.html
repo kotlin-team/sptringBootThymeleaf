@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
-<head th:include="fragment/share/head :: headerFragment">
+<head>
     <meta charset="UTF-8" />
     <title th:text="${title}">Title</title>
+    <th:block th:include="fragment/share/head :: headerFragment"></th:block>
+    <link th:href="@{'/resources/css/index/index.css'}" rel="stylesheet"/>
 </head>
 <body>
 <!--navigation bar-->
@@ -35,18 +36,27 @@
                             </td>
                         </tr>
                 </tbody>
-                <tfoot>
-                    <!--STUDENT PAGINATION-->
-                    <ul class="pagination center">
-                        <li  class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                        <li th:each="i: ${#numbers.sequence(paging.startPage,paging.endPage)}" class="active" th:class="${i==paging.currentPage} ? 'active':'waves-effect'">
-                            <a href="#!" th:onclick="'onPaging('+ ${i} +')'" th:text="${i}">1</a>
-                        </li>
-                        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-                    </ul>
-                </tfoot>
             </table>
-
+            <div>
+                <!--STUDENT PAGINATION-->
+                <ul class="pagination center">
+                    <li class="waves-effect" th:class="${paging.currentPage==paging.startPage} ? 'disabled' : ''">
+                        <a href="#!" th:onclick="'onPaging(1)'"><i class="material-icons">first_page</i></a>
+                    </li>
+                    <li th:class="${paging.currentPage==paging.startPage} ? 'disabled' : ''">
+                        <a href="#!" th:onclick="'onPaging('+${paging.previousPage}+')'"><i class="material-icons">chevron_left</i></a>
+                    </li>
+                    <li th:each="i: ${#numbers.sequence(paging.startPage,paging.endPage)}" class="active" th:class="${i==paging.currentPage} ? 'active':'waves-effect'">
+                        <a href="#!" th:onclick="'onPaging('+ ${i} +')'" th:text="${i}">1</a>
+                    </li>
+                    <li class="waves-effect" th:class="${paging.currentPage==paging.endPage} ? 'disabled' : ''">
+                        <a href="#!" th:onclick="'onPaging('+${paging.nextPage}+')'"><i class="material-icons">chevron_right</i></a>
+                    </li>
+                    <li class="waves-effect" th:class="${paging.currentPage==paging.endPage} ? 'disabled' : ''">
+                        <a href="#!" th:onclick="'onPaging('+${paging.totalPages}+')'"> <i class="material-icons">last_page</i> </a>
+                    </li>
+                </ul>
+            </div>
         </div>
         <!--include footer  from resource  fragment/share/footer-->
         <footer class="page-footer" th:include="fragment/share/footer :: footerFragment"></footer>
@@ -58,7 +68,7 @@
 
         var loadStudents=function(currentPage){
             $.ajax({
-                url:'student/'+currentPage,
+                url:'/student/'+currentPage,
                 method :'GET',
                 success: function (res) {
                     $('#studentTable').html(res)

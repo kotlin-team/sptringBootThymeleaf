@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragment/share/head ::headerFragment">
+<head>
     <meta charset="UTF-8" />
     <title th:text="${title}">Title</title>
+    <th:block th:include="fragment/share/head ::headerFragment"></th:block>
 </head>
 <body>
 <!--navigation bar-->

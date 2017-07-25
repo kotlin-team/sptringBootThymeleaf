@@ -22,9 +22,9 @@ class MemoryPagination <E> {
         var endRow =0
         if(startRow+rowPerPage > list.size) endRow =list.size else endRow=startRow+rowPerPage
 */
-        val pagination= Pagination(currentPage,list.size)
-        pagination.pagesToShow=rowPerPage
+        val pagination= Pagination(currentPage ,rowPerPage)
+        pagination.setTotalCount(list.size)
+        print(pagination.toString())
         return  pagination
     }
-
 }

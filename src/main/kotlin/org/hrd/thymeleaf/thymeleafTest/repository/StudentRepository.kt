@@ -22,15 +22,28 @@ class StudentRepository {
             Student(studentId = 7, studentName = "Vansa", studentGender = "male", studentDob = Date.valueOf("1994-02-14"), studentPob = "Phnom Penh"),
             Student(studentId = 8, studentName = "Channy", studentGender = "other", studentDob = Date.valueOf("1993-09-19"), studentPob = "Phnom Penh"),
             Student(studentId = 9, studentName = "Fickkry", studentGender = "male", studentDob = Date.valueOf("1994-10-17"), studentPob = "Phnom Penh"),
-            Student(studentId = 10, studentName = "Sevmey", studentGender = "female", studentDob = Date.valueOf("1996-12-19"), studentPob = "Phnom Penh")
+            Student(studentId = 10, studentName = "Sevmey", studentGender = "female", studentDob = Date.valueOf("1996-12-19"), studentPob = "Phnom Penh") ,
+            Student(studentId = 11, studentName = "Sothearin", studentGender = "female", studentDob = Date.valueOf("1996-01-25"), studentPob = "Phnom Penh"),
+            Student(studentId = 12, studentName = "Vansa", studentGender = "male", studentDob = Date.valueOf("1994-02-14"), studentPob = "Phnom Penh"),
+            Student(studentId = 13, studentName = "Channy", studentGender = "other", studentDob = Date.valueOf("1993-09-19"), studentPob = "Phnom Penh"),
+            Student(studentId = 14, studentName = "Fickkry", studentGender = "male", studentDob = Date.valueOf("1994-10-17"), studentPob = "Phnom Penh"),
+            Student(studentId = 15, studentName = "Sevmey", studentGender = "female", studentDob = Date.valueOf("1996-12-19"), studentPob = "Phnom Penh"),
+            Student(studentId = 16, studentName = "Sothearin", studentGender = "female", studentDob = Date.valueOf("1996-01-25"), studentPob = "Phnom Penh"),
+            Student(studentId = 17, studentName = "Vansa", studentGender = "male", studentDob = Date.valueOf("1994-02-14"), studentPob = "Phnom Penh"),
+            Student(studentId = 18, studentName = "Channy", studentGender = "other", studentDob = Date.valueOf("1993-09-19"), studentPob = "Phnom Penh"),
+            Student(studentId = 19, studentName = "Fickkry", studentGender = "male", studentDob = Date.valueOf("1994-10-17"), studentPob = "Phnom Penh"),
+            Student(studentId = 20, studentName = "Sevmey", studentGender = "female", studentDob = Date.valueOf("1996-12-19"), studentPob = "Phnom Penh")
+
+
     )
 
     fun getAllStudents() : MutableList<Student>{
         return this.studentLists
     }
-    fun getAllStudentsWithPaginate(startRow : Int, endRow : Int) : MutableList<Student>{
-       // val pagination =MemoryPagination<Student>().getMemoryPagination(currentPage= page, rowPerPage=rowPerPage,list = this.studentLists)
-        val studentOut= this.studentLists.subList(startRow,endRow)
+
+    fun getAllStudentsWithPaginate(pagination: Pagination) : MutableList<Student>{
+
+        val studentOut= this.studentLists.subList(pagination.getOffset(),this.limitList(pagination,this.studentLists))
         return studentOut;
     }
     fun getOneStudent(id: Int) : Student?{
@@ -73,5 +86,13 @@ class StudentRepository {
 
     fun getLastId() : Int {
         return this.studentLists.get(this.studentLists.size-1).getId()
+    }
+
+    fun limitList (pagination: Pagination, list : MutableList<Student>) :Int{
+        if(pagination.getOffset()+pagination.getRowPerPage() >= list.size){
+            return list.size
+        }else{
+            return pagination.getOffset()+pagination.getRowPerPage()
+        }
     }
 }

@@ -28,15 +28,7 @@ class StudentController
     /*========================================
      * RestFul
      =========================================*/
-    @ResponseBody
-    @GetMapping("/info")
-    fun getStudents() : MutableList<Student>
-    {
-        val list : MutableList<Student> = arrayListOf<Student>()
-        //list.add(Student(studentName = "test" ,studentGender = "male", studentDob = Date.valueOf("1995-12-12"),studentPob = "Phmone Penh"))
-        //list.add(Student(studentName = "test" ,studentGender = "male", studentDob = Date.valueOf("1995-12-12"),studentPob = "Phmone Penh"))
-        return list;
-    }
+
     @ResponseBody
     @GetMapping("/get-edit")
     fun getAStudentEdit(model:ModelMap , @RequestParam("id") id : Int) : ResponseEntity<MutableMap<String ,Any>>
@@ -46,10 +38,10 @@ class StudentController
             val student = studentRepository.getOneStudent(id)
             println(student.toString())
             if (student!=null){
-                map.put("DATA" , student as Object)
-                map.put("CODE", 200 as Object)
-                map.put("STATUS" , true as Object)
-                map.put("MESSAGE" , "GET STUDENT SUCCESSFUL" as Object)
+                map.put("DATA" , student)
+                map.put("CODE", 200 )
+                map.put("STATUS" , true )
+                map.put("MESSAGE" , "GET STUDENT SUCCESSFUL")
             }
         }catch (e: Exception){
             e.printStackTrace()
@@ -65,11 +57,11 @@ class StudentController
     @GetMapping("/{p}")
     fun getStudentPerPage(model : ModelMap,@PathVariable("p") currentPage:Int) : String
     {
-        val list= studentRepository.getAllStudentsWithPaginate(currentPage,5)
-        val pagin=
+        val paging= MemoryPagination<Student>().getMemoryPagination(currentPage,3,this.studentRepository.getAllStudents())
+        val list= studentRepository.getAllStudentsWithPaginate(paging)
         model.put("students",list)
         model.put("title" , "home | ")
-        model.put("paging", MemoryPagination<Student>().getMemoryPagination(currentPage,5,list))
+        model.put("paging",paging)
         return "index :: studentFragment"
     }
 
@@ -114,10 +106,12 @@ class StudentController
     @GetMapping(value = *arrayOf("/",""))
     fun homePage(model : ModelMap) : String
     {
-        val list : MutableList<Student> =this.studentRepository.getAllStudentsWithPaginate(startRow = 1, endRow = 5)
+        val paging= MemoryPagination<Student>().getMemoryPagination(1,3,this.studentRepository.getAllStudents())
+        val list : MutableList<Student> =this.studentRepository.getAllStudentsWithPaginate(paging)
+
         model.put("students",list);
         model.put("title" , "home | ")
-        model.put("paging",MemoryPagination<Student>().getMemoryPagination(1,5,list))
+        model.put("paging",paging)
         return "index"
     }
 
@@ -204,7 +198,7 @@ class StudentController
     }
 
     //bind data with html page
-    private fun studentsPaginate(page :Int , dataPerRow: Int ) : String {
+    /*private fun studentsPaginate(page :Int , dataPerRow: Int ) : String {
         val list = studentRepository.getAllStudentsWithPaginate(page,dataPerRow)
         var totalData =""
         var stduentRow= (page -1)*dataPerRow +1
@@ -225,7 +219,7 @@ class StudentController
         }
 
         return totalData;
-    }
+    }*/
 
 
 }
